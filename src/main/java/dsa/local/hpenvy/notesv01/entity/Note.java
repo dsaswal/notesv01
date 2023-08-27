@@ -1,6 +1,7 @@
 package dsa.local.hpenvy.notesv01.entity;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Objects;
 
 import org.slf4j.Logger;
@@ -8,10 +9,12 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Version;
@@ -29,6 +32,12 @@ public class Note {
     private String note;
     private Timestamp createdTime;
     private Timestamp lastModifiedTime;
+    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private List<Tag> tags;
+    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private List<Topic> topics;
+    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private List<Review> reviews;
     @Version
     private Integer version;
 

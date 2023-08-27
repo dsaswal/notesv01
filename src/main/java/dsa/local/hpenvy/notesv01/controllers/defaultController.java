@@ -13,4 +13,9 @@ public class defaultController {
         return "home";
     }
     
+    @GetMapping("/error")
+    public String errorMethod() {
+        return "error";
+    }
+    
 }
