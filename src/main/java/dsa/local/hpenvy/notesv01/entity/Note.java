@@ -3,20 +3,30 @@ package dsa.local.hpenvy.notesv01.entity;
 import java.sql.Timestamp;
 import java.util.Objects;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Version;
 
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Note {
+
+    private static final Logger logger = LoggerFactory.getLogger(Note.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String title;
-    private String details;
+    private String note;
     private Timestamp createdTime;
     private Timestamp lastModifiedTime;
     @Version
@@ -24,15 +34,23 @@ public class Note {
 
     public Note() {
     }
-    
 
-    public Note(long id, String title, String details, Timestamp createdTime, Timestamp lastModifiedTime, Integer version) {
-        this.id = id;
+    public Note(String title, String note) {
         this.title = title;
-        this.details = details;
-        this.createdTime = createdTime;
-        this.lastModifiedTime = lastModifiedTime;
-        this.version = version;
+        this.note = note;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        createdTime = new Timestamp(System.currentTimeMillis());
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        lastModifiedTime = new Timestamp(System.currentTimeMillis());
+        logger.debug("#################-in-pre-update");
+        // version = version++;
+        logger.debug("#################-" + this.toString());
     }
 
     public long getId() {
@@ -51,12 +69,12 @@ public class Note {
         this.title = title;
     }
 
-    public String getDetails() {
-        return this.details;
+    public String getNote() {
+        return this.note;
     }
 
-    public void setDetails(String details) {
-        this.details = details;
+    public void setNote(String details) {
+        this.note = details;
     }
 
     public Timestamp getCreatedTime() {
@@ -83,36 +101,6 @@ public class Note {
         this.version = version;
     }
 
-    public Note id(long id) {
-        setId(id);
-        return this;
-    }
-
-    public Note title(String title) {
-        setTitle(title);
-        return this;
-    }
-
-    public Note details(String details) {
-        setDetails(details);
-        return this;
-    }
-
-    public Note createdTime(Timestamp createdTime) {
-        setCreatedTime(createdTime);
-        return this;
-    }
-
-    public Note lastModifiedTime(Timestamp lastModifiedTime) {
-        setLastModifiedTime(lastModifiedTime);
-        return this;
-    }
-
-    public Note version(Integer version) {
-        setVersion(version);
-        return this;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -121,12 +109,12 @@ public class Note {
             return false;
         }
         Note note = (Note) o;
-        return id == note.id && Objects.equals(title, note.title) && Objects.equals(details, note.details) && Objects.equals(createdTime, note.createdTime) && Objects.equals(lastModifiedTime, note.lastModifiedTime) && Objects.equals(version, note.version);
+        return id == note.id && Objects.equals(title, note.title) && Objects.equals(note, note.note) && Objects.equals(createdTime, note.createdTime) && Objects.equals(lastModifiedTime, note.lastModifiedTime) && Objects.equals(version, note.version);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, details, createdTime, lastModifiedTime, version);
+        return Objects.hash(id, title, note, createdTime, lastModifiedTime, version);
     }
 
     @Override
@@ -134,7 +122,7 @@ public class Note {
         return "{" +
             " id='" + getId() + "'" +
             ", title='" + getTitle() + "'" +
-            ", details='" + getDetails() + "'" +
+            ", note='" + getNote() + "'" +
             ", createdTime='" + getCreatedTime() + "'" +
             ", lastModifiedTime='" + getLastModifiedTime() + "'" +
             ", version='" + getVersion() + "'" +
