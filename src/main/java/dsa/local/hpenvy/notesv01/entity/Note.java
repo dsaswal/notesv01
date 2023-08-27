@@ -41,14 +41,6 @@ public class Note {
     @Version
     private Integer version;
 
-    public Note() {
-    }
-
-    public Note(String title, String note) {
-        this.title = title;
-        this.note = note;
-    }
-
     @PrePersist
     protected void onCreate() {
         createdTime = new Timestamp(System.currentTimeMillis());
@@ -60,6 +52,22 @@ public class Note {
         logger.debug("#################-in-pre-update");
         // version = version++;
         logger.debug("#################-" + this.toString());
+    }
+
+
+    public Note() {
+    }
+
+    public Note(long id, String title, String note, Timestamp createdTime, Timestamp lastModifiedTime, List<Tag> tags, List<Topic> topics, List<Review> reviews, Integer version) {
+        this.id = id;
+        this.title = title;
+        this.note = note;
+        this.createdTime = createdTime;
+        this.lastModifiedTime = lastModifiedTime;
+        this.tags = tags;
+        this.topics = topics;
+        this.reviews = reviews;
+        this.version = version;
     }
 
     public long getId() {
@@ -82,8 +90,8 @@ public class Note {
         return this.note;
     }
 
-    public void setNote(String details) {
-        this.note = details;
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public Timestamp getCreatedTime() {
@@ -102,6 +110,30 @@ public class Note {
         this.lastModifiedTime = lastModifiedTime;
     }
 
+    public List<Tag> getTags() {
+        return this.tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public List<Topic> getTopics() {
+        return this.topics;
+    }
+
+    public void setTopics(List<Topic> topics) {
+        this.topics = topics;
+    }
+
+    public List<Review> getReviews() {
+        return this.reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
     public Integer getVersion() {
         return this.version;
     }
@@ -118,12 +150,12 @@ public class Note {
             return false;
         }
         Note note = (Note) o;
-        return id == note.id && Objects.equals(title, note.title) && Objects.equals(note, note.note) && Objects.equals(createdTime, note.createdTime) && Objects.equals(lastModifiedTime, note.lastModifiedTime) && Objects.equals(version, note.version);
+        return id == note.id && Objects.equals(title, note.title) && Objects.equals(note, note.note) && Objects.equals(createdTime, note.createdTime) && Objects.equals(lastModifiedTime, note.lastModifiedTime) && Objects.equals(tags, note.tags) && Objects.equals(topics, note.topics) && Objects.equals(reviews, note.reviews) && Objects.equals(version, note.version);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, note, createdTime, lastModifiedTime, version);
+        return Objects.hash(id, title, note, createdTime, lastModifiedTime, tags, topics, reviews, version);
     }
 
     @Override
@@ -134,6 +166,9 @@ public class Note {
             ", note='" + getNote() + "'" +
             ", createdTime='" + getCreatedTime() + "'" +
             ", lastModifiedTime='" + getLastModifiedTime() + "'" +
+            ", tags='" + getTags() + "'" +
+            ", topics='" + getTopics() + "'" +
+            ", reviews='" + getReviews() + "'" +
             ", version='" + getVersion() + "'" +
             "}";
     }
