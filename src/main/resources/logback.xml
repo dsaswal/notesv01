@@ -1,6 +1,6 @@
 <configuration>
-    <property name="log.dir" value="$HOME/logs/notesv01" />
-    <property scope="system" name="logDir" value="${HOME}" />
+    <property name="log.dir" value="C:/tools/logs/notesv01" />
+    <property scope="system" name="logDir" value="C:/tools/logs/notesv01" />
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
